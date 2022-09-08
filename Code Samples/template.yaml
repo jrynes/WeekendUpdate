@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  python3.9
+
+  Sample SAM Template for scrape_web1
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 3
+
+Resources:
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      PackageType: Image
+      Architectures:
+        - x86_64
+      Events:
+        HelloWorld:
+          Type: Schedule
+          Properties:
+            Schedule: cron(0 8 ? * FRI *) #Required. Schedule expression, which MUST follow the schedule expression syntax rules.
+            Name: Friday-8AM-UTC # STRING - A name for the Schedule. If you don't specify a name, a unique name will be generated.
+            Description: Run every Friday at 8AM UTC # STRING - Description of Schedule.
+            Enabled: True #Indicated whether the Schedule is enabled.
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./hello_world #Change this to refer to where your Dockerfile is located
+      DockerTag: python3.9-v1
+
+Outputs:
+  HelloWorldFunction:
+    Description: "Hello World Lambda Function ARN"
+    Value: !GetAtt HelloWorldFunction.Arn
+  HelloWorldFunctionIamRole:
+    Description: "Implicit IAM Role created for Hello World function"
+    Value: !GetAtt HelloWorldFunctionRole.Arn
